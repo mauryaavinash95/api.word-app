@@ -2,7 +2,9 @@ const request = require('request-promise');
 const { Words } = require("./schema/words");
 const { History } = require("./schema/history");
 const { Save } = require("./schema/save");
-const { app_id, app_key } = require("../credentials/keys.json");
+// const { app_id, app_key } = require("../credentials/keys.json");
+const app_id = process.env.app_id || require("../credentials/keys.json").app_id;
+const app_key = process.env.app_key || require("../credentials/keys.json").app_key;
 
 const options = {
     uri: 'https://od-api.oxforddictionaries.com/api/v1/entries/en/',
