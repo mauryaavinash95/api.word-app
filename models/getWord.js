@@ -17,7 +17,7 @@ const options = {
 };
 
 function getWord(word, userId, save = 1) {
-
+    word = word.toLowerCase();
     var finalObj = {
         code: 404,
         message: "Word not found",
@@ -73,7 +73,7 @@ function getWord(word, userId, save = 1) {
                             }
                         })
                         .catch((err) => {
-                            console.log("Error: ");
+                            console.log("Error: ", err);
                             reject(finalObj)
                         });
 
