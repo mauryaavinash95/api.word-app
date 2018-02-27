@@ -11,6 +11,8 @@ const { getWord } = require("./models/getWord");
 const { saveWord } = require("./models/saveWord");
 const { getHistory } = require('./models/getHistory');
 const { getSaved } = require('./models/getSaved');
+const { getSuggestions } = require('./models/getSuggestion');
+const { updateScoreEs } = require('./models/updateScoreEs');
 
 var app = express();
 app.use(cors())
@@ -24,23 +26,25 @@ const paths = {
     signup: "/signup",
     save: "/save",
     history: "/history",
-    favorites: "/favorites"
+    favorites: "/favorites",
+    suggest: "/suggest"
 }
 
-app.use((request, response, next) => {
-    let requestUrl = request.path.toString();
-    requestUrl = requestUrl.slice(1);
-    let routes = Object.keys(paths);
-    if (routes.includes(requestUrl) || request.path === "/") {
-        next();
-    } else {
-        console.log("Path Not found");
-        response.send({
-            code: 400,
-            result: "Path not found"
-        })
-    }
-})
+// app.use((request, response, next) => {
+//     let requestUrl = request.path.toString();
+//     requestUrl = requestUrl.slice(1);
+//     let routes = Object.keys(paths);
+//     console.log("Paths: ", routes);
+//     if (routes.includes(requestUrl) || request.path === "/") {
+//         next();
+//     } else {
+//         console.log("Path Not found");
+//         response.send({
+//             code: 400,
+//             result: "Path not found"
+//         })
+//     }
+// })
 
 app.get("/", (request, response) => {
     let resp = {
@@ -50,7 +54,8 @@ app.get("/", (request, response) => {
         find: "post",
         save: "post",
         history: "post",
-        favorites: "post"
+        favorites: "post",
+        suggest: "get"
     }
     response.send(resp);
 })
@@ -114,6 +119,9 @@ app.post("/find", (request, response) => {
             getWord(word, userId, save)
                 .then((resp) => {
                     response.send(resp);
+                    if (resp.code === 200) {
+                        updateScoreEs(word);
+                    }
                 })
                 .catch((err) => {
                     response.send(err);
@@ -201,6 +209,24 @@ app.post("/favorites", (request, response) => {
                 code: 404,
                 message: "No such user found!!"
             });
+        })
+})
+
+app.get("/suggest/:word", (request, response) => {
+    let word = request.params.word;
+    getSuggestions(word)
+        .then((resolve) => {
+            response.send({
+                code: 200,
+                message: resolve
+            });
+        })
+        .catch((err) => {
+            console.log("Error is: ", err);
+            response.send({
+                code: 400,
+                message: "Got some error",
+            })
         })
 })
 
