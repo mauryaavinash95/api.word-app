@@ -24,7 +24,7 @@ function getWord(word, userId, save = 1) {
         code: 404,
         message: "Word not found",
     }
-    // console.log("Got word as: ", word);
+    console.log("Got word as: ", word);
     return new Promise((resolve, reject) => {
         redisClient.hget("words", word)
             .then((res) => {
