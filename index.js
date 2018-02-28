@@ -128,7 +128,7 @@ app.post("/find", (request, response) => {
                 });
         })
         .catch((err) => {
-            // console.log("Error: ", err);
+            console.log("Error: ", err);
             response.send({
                 code: 404,
                 message: "No such user found!!"

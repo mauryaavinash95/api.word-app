@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 var redis = require("redis");
 const { promisify } = require('util');
-var redisClient = {};
 const mongoAuth = require("../credentials/mongoAuth.json");
 const bonsaiAuth = require('../credentials/bonsaiAuth.json');
-var redisHost = "localhost";
+const redisAuth = require("../credentials/redisAuth.json");
 const elasticsearch = require('elasticsearch');
+
+var redisClient = {};
+
 var elasticClient = new elasticsearch.Client({
     hosts: [
         bonsaiAuth.url
@@ -32,7 +34,7 @@ function dbInit() {
         }
     });
 
-    let client = redis.createClient({ host: redisHost });
+    let client = redis.createClient(redisAuth);
     redisClient.get = promisify(client.get).bind(client);
     redisClient.set = promisify(client.set).bind(client);
     redisClient.hget = promisify(client.hget).bind(client);
