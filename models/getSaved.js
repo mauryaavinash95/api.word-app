@@ -9,7 +9,7 @@ function getSaved(userId) {
     }
     return new Promise((resolve, reject) => {
         console.log("Inside getSaved");
-        Save.find({ userId }).select("word -_id")
+        Save.find({ userId }, { word: 1, time: 1 }, { sort: { time: -1 } })
             .then((results) => {
                 let saveArr = results;
                 let finalArr = [];
