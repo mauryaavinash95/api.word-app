@@ -15,7 +15,7 @@ const { getSuggestions } = require('./models/getSuggestion');
 const { updateScoreEs } = require('./models/updateScoreEs');
 
 var app = express();
-app.use(cors())
+app.use(cors({ origin: true }))
 const port = process.env.PORT || 4000;
 app.use(bodyParser.json());
 dbWrapper.dbInit();
