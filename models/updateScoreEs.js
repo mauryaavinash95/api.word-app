@@ -11,6 +11,12 @@ function updateScoreEs(word) {
             script: {
                 "source": "ctx._source.word.weight++",
                 "lang": "painless"
+            },
+            upsert: {
+                word: {
+                    input: word,
+                    weight: 1,
+                }
             }
         }
     })

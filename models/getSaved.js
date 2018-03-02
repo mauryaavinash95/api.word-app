@@ -19,7 +19,7 @@ function getSaved(userId) {
                     tempElement.isSaved = 1;
                     finalArr.push(tempElement);
                 });
-
+                // console.log("Final Arr is: ", finalArr);
                 finalObj.code = 200;
                 finalObj.message = finalArr;
                 resolve(finalObj);

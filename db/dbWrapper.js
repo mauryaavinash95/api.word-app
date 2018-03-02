@@ -22,6 +22,9 @@ function dbInit() {
             console.log("Connection with MongoDB server successful");
         }, (reject) => {
             console.log("Error connecting to MongoDB server: ", reject);
+        })
+        .catch((err) => {
+            console.log("Error caught: ", err);
         });
 
     elasticClient.ping({

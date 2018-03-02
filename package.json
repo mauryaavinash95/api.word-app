@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "toFirebase": "cp -r models/ elastic/ db/ credentials/ functions/",
     "start": "node index.js"
   },
   "author": "",
