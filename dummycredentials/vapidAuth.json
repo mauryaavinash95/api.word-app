@@ -1,0 +1,4 @@
+{
+    "private": "vapid_private_key",
+    "public": "vapid_public_key"
+}

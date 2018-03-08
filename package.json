@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "toFirebase": "cp -r models/ elastic/ db/ credentials/ functions/",
-    "start": "node index.js"
+    "start": "node index.js",
+    "web-push": "web-push"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "redis": "^2.8.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "shortid": "^2.2.8"
+    "shortid": "^2.2.8",
+    "web-push": "^3.3.0"
   }
 }

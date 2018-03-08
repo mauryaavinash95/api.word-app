@@ -13,6 +13,8 @@ const { getHistory } = require('./models/getHistory');
 const { getSaved } = require('./models/getSaved');
 const { getSuggestions } = require('./models/getSuggestion');
 const { updateScoreEs } = require('./models/updateScoreEs');
+const { saveSubscription } = require('./models/saveSubscription');
+const { sendNotification } = require('./models/sendNotification');
 
 var app = express();
 app.use(cors({ origin: true }))
@@ -27,7 +29,8 @@ const paths = {
     save: "/save",
     history: "/history",
     favorites: "/favorites",
-    suggest: "/suggest"
+    suggest: "/suggest",
+    newsubscription: "/newsubscription"
 }
 
 // app.use((request, response, next) => {
@@ -55,7 +58,8 @@ app.get("/", (request, response) => {
         save: "post",
         history: "post",
         favorites: "post",
-        suggest: "get"
+        suggest: "get",
+        newsubscription: "post"
     }
     response.send(resp);
 })
@@ -118,6 +122,7 @@ app.post("/find", (request, response) => {
             // console.log("Got this user");
             getWord(word, userId, save)
                 .then((resp) => {
+                    sendNotification(userId, word, resp);
                     response.send(resp);
                     if (resp.code === 200) {
                         updateScoreEs(word);
@@ -194,14 +199,10 @@ app.post("/favorites", (request, response) => {
     let { userId, token } = request.body;
     validateUser(userId, token)
         .then((result) => {
-            getSaved(userId)
-                .then((resp) => {
-                    response.send(resp);
-                })
-                .catch((err) => {
-                    console.log("Error: ", err);
-                    response.send(err);
-                });
+            return getSaved(userId);
+        })
+        .then((resp) => {
+            response.send(resp);
         })
         .catch((err) => {
             console.log("Outer catch has: ", err);
@@ -223,6 +224,28 @@ app.get("/suggest/:word", (request, response) => {
         })
         .catch((err) => {
             console.log("Error is: ", err);
+            response.send({
+                code: 400,
+                message: "Got some error",
+            })
+        })
+})
+
+app.post('/newsubscription', (request, response) => {
+    let { userId, token, subscriptiondata } = request.body;
+    // console.log("Request body is: ", request.body)
+    validateUser(userId, token)
+        .then((response) => {
+            return saveSubscription(userId, token, subscriptiondata)
+        })
+        .then((res) => {
+            response.send({
+                code: 200,
+                message: "Subscription saved successfully"
+            })
+        })
+        .catch((err) => {
+            console.log("Error is in newsubscription route: ", err);
             response.send({
                 code: 400,
                 message: "Got some error",
